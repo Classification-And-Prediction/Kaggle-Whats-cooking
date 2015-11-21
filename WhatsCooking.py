@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import re, nltk        
 from nltk.stem.porter import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem import WordNetLemmatizer
 from sklearn.svm import LinearSVC
 from sklearn.feature_extraction.text import *
 from sklearn.naive_bayes import *
@@ -18,7 +20,24 @@ test_data_df.columns = ["Id","Ingredients"]
 train_data_df1 = train_data_df.drop('Id',1)
 test_data_df1 = test_data_df.drop('Id',1)
 
-vectorizer = TfidfVectorizer( lowercase=False )
+stemmer = PorterStemmer()
+
+def stem_tokens(tokens, stemmer):
+	stemmed = []
+	for item in tokens:
+		stemmed.append(stemmer.stem(item))
+	return stemmed
+
+def tokenize(text):
+    
+	text = re.sub("[^a-zA-Z]", " ", text)
+	text = re.sub(" +"," ", text)
+	tokens = nltk.word_tokenize(text)
+	stems = stem_tokens(tokens, stemmer)
+	return stems
+
+vectorizer = TfidfVectorizer(analyzer = 'word',tokenizer = tokenize,lowercase = True,stop_words = 'english')
+#vectorizer = CountVectorizer(analyzer = 'word',tokenizer = tokenize,lowercase = True,stop_words = 'english')
 
 corpus_data_features = vectorizer.fit_transform(train_data_df1.Ingredients.tolist() + test_data_df1.Ingredients.tolist())
 corpus_data_features_nd = (corpus_data_features.toarray())
