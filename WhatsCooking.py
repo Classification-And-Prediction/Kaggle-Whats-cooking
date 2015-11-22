@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
-import re, nltk        
+import re, nltk
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.snowball import SnowballStemmer
-from nltk.stem import WordNetLemmatizer
+from nltk.stem import WordNetLemmatizer      
+from nltk.stem.porter import PorterStemmer
 from sklearn.svm import LinearSVC
 from sklearn.feature_extraction.text import *
 from sklearn.naive_bayes import *
@@ -20,12 +21,12 @@ test_data_df.columns = ["Id","Ingredients"]
 train_data_df1 = train_data_df.drop('Id',1)
 test_data_df1 = test_data_df.drop('Id',1)
 
-stemmer = PorterStemmer()
+stemmer = WordNetLemmatizer()
 
 def stem_tokens(tokens, stemmer):
 	stemmed = []
 	for item in tokens:
-		stemmed.append(stemmer.stem(item))
+		stemmed.append(stemmer.lemmatize(item))
 	return stemmed
 
 def tokenize(text):
@@ -37,7 +38,6 @@ def tokenize(text):
 	return stems
 
 vectorizer = TfidfVectorizer(analyzer = 'word',tokenizer = tokenize,lowercase = True,stop_words = 'english')
-#vectorizer = CountVectorizer(analyzer = 'word',tokenizer = tokenize,lowercase = True,stop_words = 'english')
 
 corpus_data_features = vectorizer.fit_transform(train_data_df1.Ingredients.tolist() + test_data_df1.Ingredients.tolist())
 corpus_data_features_nd = (corpus_data_features.toarray())
@@ -53,6 +53,6 @@ spl = []
 for i in range(len(test_pred)) :
     spl.append(i)
 
-fw = open("results5.txt","w")
+fw = open("results8.txt","w")
 for ids, cus in zip(test_data_df.Id[spl], test_pred[spl]):
 	fw.write(str(ids)+","+str(cus)+"\n")
