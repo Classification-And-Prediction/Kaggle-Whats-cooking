@@ -53,6 +53,7 @@ spl = []
 for i in range(len(test_pred)) :
     spl.append(i)
 
-fw = open("results8.txt","w")
+fw = open("results.csv","w")
+fw.write("id,cuisine"+"\n")
 for ids, cus in zip(test_data_df.Id[spl], test_pred[spl]):
 	fw.write(str(ids)+","+str(cus)+"\n")
