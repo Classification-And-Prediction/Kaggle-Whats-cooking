@@ -5,7 +5,7 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import *
 import xgboost as xgb
 
-train_data_df = pd.read_csv('traindata3.csv',delimiter='\t',header = None)
+train_data_df = pd.read_csv('traindata_XGB.csv',delimiter='\t',header = None)
 test_data_df = pd.read_csv('testdata.csv',header = None ,delimiter="\t")
 
 train_data_df.columns = ["Id","Cuisine","Ingredients"]
@@ -59,5 +59,13 @@ for i in range(len(test_pred)) :
 fw = open("resultXGB10.txt","w")
 for ids, cus in zip(test_data_df.Id[spl], test_pred[spl]):
 	fw.write(str(ids)+","+str(cus)+"\n")
+
+fw1 = open('resultXGB10.txt','r')
+fw2 = open('resultXGB10_submit.csv','w')
+
+fw2.write("id,cuisine"+"\n")
+for i in fw1 :
+	j = i.replace('10.0','indian').replace('11.0','jamaican').replace('12.0','french').replace('13.0','spanish').replace('14.0','russian').replace('15.0','cajun_creole').replace('16.0','thai').replace('17.0','southern_us').replace('18.0','korean').replace('19.0','italian').replace('0.0','irish').replace('1.0','mexican').replace('2.0','chinese').replace('3.0','filipino').replace('4.0','vietnamese').replace('5.0','moroccan').replace('6.0','brazilian').replace('7.0','japanese').replace('8.0','british').replace('9.0','greek')
+	fw2.write(j)
 
 
